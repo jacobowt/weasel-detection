@@ -87,7 +87,7 @@ def detect_reordering(testing_log, activity_orders):
 
 
 # Specify the path to the event log in .xes format
-log_path = "C:\\Users\\tbjac\\Documents\\uni\\bachelorarbeit\\pattern detection codes\\example logs\\BPI_Challenge_2012.xes"
+log_path = "C:\\Users\\tbjac\\Documents\\uni\\bachelorarbeit\\pattern detection codes\\example logs\\3_reordering.xes"
 log = pm4py.read_xes(log_path)
 
 # The cases are shuffled randomly and then sampled into training cases and testing cases
