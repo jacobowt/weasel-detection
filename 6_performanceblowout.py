@@ -12,11 +12,6 @@ def calculate_time_taken(df):
     
     # Adds a duration column to the dataframe and set duration to NaN for "start" events
     df['duration'] = (df['time:timestamp'] - df.groupby(['case:concept:name', 'concept:name'])['time:timestamp'].shift()).dt.total_seconds()
-    
-    # Convert lifecycle:transition values to lowercase for case insensitive comparison
-    df['lifecycle:transition'] = df['lifecycle:transition'].str.lower()
-    
-    # Set duration to NaN for "start" events (case insensitive check)
     df['duration'] = df['duration'].where(df['lifecycle:transition'] != 'start', np.nan)
     
     # Returns the dataframe with the new "duration" attribute
