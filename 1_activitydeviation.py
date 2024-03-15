@@ -13,8 +13,8 @@ def detect_activity_deviation(log):
     df = pm4py.convert_to_dataframe(log)
 
     # The dataframe gets randomly split into two samples (50% are used for creating the model, 50% are tested against the model)
-    model_df = df.sample(frac=0.5, random_state=1)
-    test_df = df.drop(model_df.index)
+    l1 = df.sample(frac=0.5, random_state=1)
+    l2 = df.drop(l1.index)
 
     # An inner function is defined to make it possible to apply the algorithm two times, swapping the roles of the training (model) and testing dataframes in the second iteration
     def inner_function(training_sample, testing_sample):
@@ -38,8 +38,8 @@ def detect_activity_deviation(log):
                 results.append(results_entry)
 
     # The inner function is called two times, swapping the roles of the model and testing segments in the second iteration to check as much of the log as possible
-    inner_function(model_df, test_df)
-    inner_function(test_df, model_df)
+    inner_function(l1, l2)
+    inner_function(l2, l1)
 
     # The results are written to a csv table if an according path got specified
     if output_csv_path:
