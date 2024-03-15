@@ -116,8 +116,5 @@ if os.path.exists(output_csv_path):
 detect_reordering(l2, activity_orders)
 
 # The roles of training and testing logs are swapped and the algorithm is applied again to check as much of the log as possible
-tmp = l1
-l1 = l2 
-l2 = tmp
-activity_orders = generate_activity_orders(l1)
-detect_reordering(l2, activity_orders)
+activity_orders = generate_activity_orders(l2)
+detect_reordering(l1, activity_orders)
