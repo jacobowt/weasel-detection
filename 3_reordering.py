@@ -14,13 +14,13 @@ def generate_activity_orders(l1):
     grouped_cases = l1.groupby('case:concept:name')
 
     # It is iterated through each case
-    for case, events in grouped_cases:
+    for case, activities in grouped_cases:
 
-        # The events are ordered based on their timestamps
-        ordered_events = events.sort_values('time:timestamp')
+        # The activities are ordered based on their timestamps
+        ordered_activities = activities.sort_values('time:timestamp')
 
-        # The activites of these ordered events get converted to a list of dictionaries where each dictionary represents an event, and an index is added to each event starting from 1.
-        activity_sequence = [f"{i}.{event['concept:name']}" for i, event in enumerate(ordered_events.to_dict(orient='records'), start=1)]
+        # The activites of these ordered activities get converted to a list of dictionaries where each dictionary represents an activity, and an index is added to each activity starting from 1.
+        activity_sequence = [f"{i}.{activity['concept:name']}" for i, activity in enumerate(ordered_activities.to_dict(orient='records'), start=1)]
 
         # The sequence of activities for the regarded case with their activities is appended to the activity_orders dictionary
         activity_orders[case].append((activity_sequence,))
