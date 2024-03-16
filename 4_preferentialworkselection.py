@@ -73,20 +73,6 @@ def detect_preferential_work_selection_average(log, threshold_factor):
                     }
                     results.append(results_entry)
 
-                # Second condition for Preferential Work Selection, if a resource performed an activity significantly less than expected
-                else:
-                    print(f"Possible Preferential Work Selection detected, resource {resource} has performed activity {activity} {count} times, while it was performed {average_frequency[activity]} times on average. That is significantly less than expected.")
-
-                    # The results get stored in the results list
-                    results_entry = {
-                        'Resource': resource,
-                        'Activity': activity,
-                        'Case': '',
-                        'Resource Frequency': count,
-                        'Average Frequency': average_frequency[activity],
-                        'Explanation': 'The resource conducted the activity significantly less than expected'
-                    }
-                    results.append(results_entry)
 
     # The results are written to a csv table if an according path got specified
     if output_csv_path:
@@ -110,19 +96,13 @@ def detect_preferential_work_selection_fcfs(log):
         start_timestamp = pd.to_datetime(start_activity['time:timestamp'])
 
         # Find the first valid complete timestamp for the corresponding activity
-        complete_timestamp = pd.to_datetime(df[(df['case:concept:name'] == start_activity['case:concept:name']) &
-                                               (df['org:resource'] == start_activity['org:resource']) &
-                                               (df['lifecycle:transition'].str.lower() == 'complete') &
-                                               (df['concept:name'] == start_activity['concept:name'])]['time:timestamp'].min())
+        complete_timestamp = pd.to_datetime(df[(df['case:concept:name'] == start_activity['case:concept:name']) & (df['org:resource'] == start_activity['org:resource']) & (df['lifecycle:transition'].str.lower() == 'complete') & (df['concept:name'] == start_activity['concept:name'])]['time:timestamp'].min())
 
         # After a valid complete timestamp was found, it is searched for other activities being started between the two previously retrieved (and related) timestamps by the same resource
         if pd.notna(complete_timestamp):
-            for _, new_start_activity in df[(df['lifecycle:transition'].str.lower() == 'start') &
-                                            (df['org:resource'] == start_activity['org:resource']) &
-                                            (df['time:timestamp'] > start_timestamp) &
-                                            (df['time:timestamp'] < complete_timestamp)].iterrows():
+            for _, new_start_activity in df[(df['lifecycle:transition'].str.lower() == 'start') & (df['org:resource'] == start_activity['org:resource']) & (df['case:concept:name'] != start_activity['case:concept:name']) & (df['time:timestamp'] > start_timestamp) & (df['time:timestamp'] < complete_timestamp)].iterrows():
 
-                # Third condition for Preferential Work Selection, if a resource started a new activity while not having completed another
+                # Second condition for Preferential Work Selection, if a resource started a new activity while not having completed another activity in another case
                 print(f"Possible Preferential Work Selection detected, resource {start_activity['org:resource']} started activity {new_start_activity['concept:name']} in case {new_start_activity['case:concept:name']} at {new_start_activity['time:timestamp']} while still not having completed activity {start_activity['concept:name']} in case {start_activity['case:concept:name']} at {complete_timestamp}")
 
                 # The results get stored in the results list
@@ -165,4 +145,5 @@ if os.path.exists(output_csv_path):
 # The functions are called with the specified log and threshold
 detect_preferential_work_selection_average(log, threshold_factor)
 detect_preferential_work_selection_fcfs(log)
+
 
