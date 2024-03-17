@@ -90,17 +90,17 @@ def detect_preferential_work_selection_fcfs(log):
     df = pm4py.convert_to_dataframe(log)
 
     # It is iterated through each time an activity is started in the log
-    for _, start_activity in df[df['lifecycle:transition'].str.lower() == 'start'].iterrows():
+    for _, start_activity in df[df['lifecycle:transition'] == 'start'].iterrows():
 
         # The start timestamp is retrieved
         start_timestamp = pd.to_datetime(start_activity['time:timestamp'])
 
         # Find the first valid complete timestamp for the corresponding activity
-        complete_timestamp = pd.to_datetime(df[(df['case:concept:name'] == start_activity['case:concept:name']) & (df['org:resource'] == start_activity['org:resource']) & (df['lifecycle:transition'].str.lower() == 'complete') & (df['concept:name'] == start_activity['concept:name'])]['time:timestamp'].min())
+        complete_timestamp = pd.to_datetime(df[(df['case:concept:name'] == start_activity['case:concept:name']) & (df['org:resource'] == start_activity['org:resource']) & (df['lifecycle:transition'] == 'complete') & (df['concept:name'] == start_activity['concept:name'])]['time:timestamp'].min())
 
         # After a valid complete timestamp was found, it is searched for other activities being started between the two previously retrieved (and related) timestamps by the same resource
         if pd.notna(complete_timestamp):
-            for _, new_start_activity in df[(df['lifecycle:transition'].str.lower() == 'start') & (df['org:resource'] == start_activity['org:resource']) & (df['case:concept:name'] != start_activity['case:concept:name']) & (df['time:timestamp'] > start_timestamp) & (df['time:timestamp'] < complete_timestamp)].iterrows():
+            for _, new_start_activity in df[(df['lifecycle:transition'] == 'start') & (df['org:resource'] == start_activity['org:resource']) & (df['case:concept:name'] != start_activity['case:concept:name']) & (df['time:timestamp'] > start_timestamp) & (df['time:timestamp'] < complete_timestamp)].iterrows():
 
                 # Second condition for Preferential Work Selection, if a resource started a new activity while not having completed another activity in another case
                 print(f"Possible Preferential Work Selection detected, resource {start_activity['org:resource']} started activity {new_start_activity['concept:name']} in case {new_start_activity['case:concept:name']} at {new_start_activity['time:timestamp']} while still not having completed activity {start_activity['concept:name']} in case {start_activity['case:concept:name']} at {complete_timestamp}")
@@ -112,7 +112,7 @@ def detect_preferential_work_selection_fcfs(log):
                     'Case': new_start_activity['case:concept:name'],
                     'Resource Frequency': '',
                     'Average Frequency': '',
-                    'Explanation': 'The resource started the activity while still being involved in another'
+                    'Explanation': 'The resource started the activity while still being involved in another case'
                 }
                 results.append(results_entry)
 
