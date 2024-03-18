@@ -146,7 +146,6 @@ def detect_boss_mobbing(df, boss_takeover_timestamp, threshold):
 
                 # The results get stored in the results list
                 results_entry = {
-                    'Detected Weasel Pattern': 'Boss Mobbing',
                     'Resource': resource,
                     'Average Event Duration Before Boss Takeover': avg_duration_before,
                     'Average Event Duration After Boss Takeover': avg_duration_after,
