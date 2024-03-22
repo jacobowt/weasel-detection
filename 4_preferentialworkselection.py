@@ -2,7 +2,7 @@ import pm4py
 import pandas as pd
 import os
 
-# The algorithm for the detection of the first and second conditions of Preferential Work Selection, resources selecting certain activities more or less often than expected, gets defined as a function
+# The algorithm for the detection of the first condition of Preferential Work Selection, resources selecting certain activities more or less often than expected, gets defined as a function
 def detect_preferential_work_selection_average(log, threshold_factor):
 
     # A list for the results that later get written in the output csv table is initialized, empty at first
@@ -80,7 +80,7 @@ def detect_preferential_work_selection_average(log, threshold_factor):
         results_df.to_csv(output_csv_path, mode='a', index=False, header=not os.path.exists(output_csv_path))
         print(f"Results appended to {output_csv_path}")
 
-# The algorithm for the detection of the third condition of Preferential Work Selection, resources starting a new activity despite not having completed another one (therefore not following First Come First Served),  gets defined as a function
+# The algorithm for the detection of the second condition of Preferential Work Selection, resources starting a new activity despite not having completed another one (therefore not following First Come First Served),  gets defined as a function
 def detect_preferential_work_selection_fcfs(log):
 
     # A list for the results that later get written in the output csv table is initialized, empty at first
@@ -145,5 +145,3 @@ if os.path.exists(output_csv_path):
 # The functions are called with the specified log and threshold
 detect_preferential_work_selection_average(log, threshold_factor)
 detect_preferential_work_selection_fcfs(log)
-
-
