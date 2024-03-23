@@ -39,12 +39,21 @@ def detect_social_borrowing(log, threshold):
     work_starting_times = {'Alice': pd.to_datetime('09:00:00').time(), 'Bob': pd.to_datetime('12:00:00').time()}
     work_ending_times = {'Alice': pd.to_datetime('17:00:00').time(), 'Bob': pd.to_datetime('19:00:00').time()}
 
+
     # Default working times for resources without specified working times are set here
     for resource in df['org:resource'].unique():
         if resource not in work_starting_times:
-            work_starting_times[resource] = pd.to_datetime('09:00:00').time()
+
+            # The earliest time registered for the resource gets retrieved and allocated as the work starting time
+            earliest_event_time = df[df['org:resource'] == resource]['time:timestamp'].dt.time.min()
+            work_starting_times[resource] = earliest_event_time
+
         if resource not in work_ending_times:
-            work_ending_times[resource] = pd.to_datetime('17:00:00').time()
+
+            # The latest time registered for the resource gets retrieved and allocated as the work ending time
+            latest_event_time = df[df['org:resource'] == resource]['time:timestamp'].dt.time.max()
+            work_ending_times[resource] = latest_event_time
+
 
     # It is iterated through each pair of resources
     for resource1 in work_starting_times:
