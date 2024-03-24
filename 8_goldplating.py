@@ -82,7 +82,7 @@ def detect_gold_plating_duration(log, process_variants, threshold):
 
         # First condition for Gold Plating, if the variant has a significantly longer average activity duration than the average variant
         if (overall_avg_duration - df['duration'].mean()) > df['duration'].mean() * threshold:
-            print(f"Possible Gold Plating detected, the cases {cases} represent a process variant which contains activities with a significantly longer average event duration ({overall_avg_duration} seconds) in comparison with the average activity duration of the average process variant ({df['duration'].mean()} seconds)")
+            print(f"Possible Gold Plating detected, the cases {cases} represent a process variant which contains activities with a significantly longer average activity duration ({overall_avg_duration} seconds) in comparison with the average activity duration of the average process variant ({df['duration'].mean()} seconds)")
 
             # The results get stored in the results list
             results_entry = {
