@@ -77,18 +77,21 @@ def detect_gold_plating_duration(log, process_variants, threshold):
         case_avg_durations = variant_df.groupby('case:concept:name')['duration'].mean()
 
         # The overall average duration for the variant is calculated and stored
-        overall_avg_duration = case_avg_durations.mean()
-        avg_durations[variant] = overall_avg_duration
+        variant_avg_duration = case_avg_durations.mean()
+        avg_durations[variant] = variant_avg_duration
 
         # First condition for Gold Plating, if the variant has a significantly longer average activity duration than the average variant
-        if (overall_avg_duration - df['duration'].mean()) > df['duration'].mean() * threshold:
-            print(f"Possible Gold Plating detected, the cases {cases} represent a process variant which contains activities with a significantly longer average activity duration ({overall_avg_duration} seconds) in comparison with the average activity duration of the average process variant ({df['duration'].mean()} seconds)")
+        if (variant_avg_duration - df['duration'].mean()) > df['duration'].mean() * threshold:
+            print(f"Possible Gold Plating detected, the cases {cases} represent a process variant which contains activities with a significantly longer average event duration ({variant_avg_duration} seconds) in comparison with the average activity duration of the average process variant ({df['duration'].mean()} seconds)")
 
             # The results get stored in the results list
             results_entry = {
                 'Cases': cases,
-                'Variant Average Activity Duration': overall_avg_duration,
+                'Variant Average Activity Duration': variant_avg_duration,
                 'Average Variant Average Activity Duration': df['duration'].mean(),
+                '"Weird" activity': '',
+                'Activity Count': '',
+                'Total Activity Count': '',
                 'Explanation': 'The process variant has a significantly longer average activity duration than the average variant'
             }
             results.append(results_entry)
@@ -134,7 +137,9 @@ def detect_gold_plating_rare(log, process_variants, activity_frequencies, thresh
             # The results get stored in the results list
             results_entry = {
                 'Cases': cases,
-                '"Weird" activity': rare_activity,
+                'Variant Average Activity Duration': '',
+                'Average Variant Average Activity Duration': '',
+                '"Weird" Activity': rare_activity,
                 'Activity Count': activity_count,
                 'Total Activity Count': total_activities_count,
                 'Explanation': 'The process variant contains a significantly rare activity'
