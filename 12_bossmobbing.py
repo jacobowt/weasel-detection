@@ -7,8 +7,8 @@ import os
 def merge_start_complete_timestamps(df):
 
     # The entries for the start and completion timestamps are retrieved
-    start_events = df[df['lifecycle:transition'].str.lower() == 'start']
-    complete_events = df[df['lifecycle:transition'].str.lower() == 'complete']
+    start_events = df[df['lifecycle:transition'] == 'start']
+    complete_events = df[df['lifecycle:transition'] == 'complete']
     
     # Those entries get merged if the other attributes are similar
     merged_events = pd.merge(start_events, complete_events, on=['org:resource', 'concept:name', 'case:concept:name'])
