@@ -94,8 +94,8 @@ def detect_social_borrowing(log, threshold):
 
                         # The results get stored in the results list
                         results_entry = {
-                            'Initiating Resource': resource,
-                            'Victim Resource': resource,
+                            'Initiating Resource': resource1,
+                            'Victim Resource': resource2,
                             'Initiating Resource Average Time (Alone)': mean_duration_resource1_alone,
                             'Initiating Resource Average Time (Overlap)': mean_duration_resource1_overlap,
                             'Victim Resource Average Time (Alone)': mean_duration_resource2_alone,
